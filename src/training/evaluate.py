@@ -1,24 +1,35 @@
+from sklearn.metrics import classification_report, confusion_matrix
 import torch
-from torch.utils.data import DataLoader
 from torchvision import transforms
-from src.datasets.mri_dataset import MRIDataset
 from src.models.resnet import get_model
+from src.datasets.mri_dataset import MRIDataset
+from torch.utils.data import DataLoader
 
-transform = transforms.ToTensor()
-test_dataset = MRIDataset("data/processed/test", transform)
-test_loader = DataLoader(test_dataset, batch_size=16)
+test_transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor()
+])
 
-model = get_model(4)
-model.load_state_dict(torch.load("experiments/model.pth"))
+test_dataset = MRIDataset("data/processed/test", transform=test_transform)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+model = get_model(num_classes=4)
+model.load_state_dict(torch.load("experiments/model.pth", map_location="cpu"))
 model.eval()
 
-correct, total = 0, 0
+all_preds = []
+all_labels = []
 
 with torch.no_grad():
     for images, labels in test_loader:
         outputs = model(images)
         preds = outputs.argmax(1)
-        correct += (preds == labels).sum().item()
-        total += labels.size(0)
+        all_preds.extend(preds.numpy())
+        all_labels.extend(labels.numpy())
 
-print(f"Accuracy: {correct / total:.2f}")
+classes = ["Glioma", "Meningioma", "Pituitary", "No Tumor"]
+print("Classification report:")
+print(classification_report(all_labels, all_preds, target_names=classes))
+
+print("Confusion matrix:")
+print(confusion_matrix(all_labels, all_preds))
