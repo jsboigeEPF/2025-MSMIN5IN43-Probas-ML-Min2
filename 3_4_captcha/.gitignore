@@ -1,0 +1,5 @@
+# Editor configuration files
+.DS_Store
+
+# Generated data
+data
