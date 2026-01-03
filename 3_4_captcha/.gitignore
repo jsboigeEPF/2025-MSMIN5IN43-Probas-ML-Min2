@@ -1,0 +1,8 @@
+# Editor configuration files
+.DS_Store
+
+# Python environment directory
+.venv
+
+# Generated data
+data
