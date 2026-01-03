@@ -23,18 +23,36 @@ ranking = pd.DataFrame({
     "Team": [id2team[i + 1] for i in range(len(attack_mean))],
     "Attack": attack_mean,
     "Defense": defense_mean
-}).sort_values("Attack", ascending=False)
+})
 
-print("="*40)
-print("Team ranking by attack/defense strength:")
-print(ranking.head(10))
+print("="*60)
+print("BEST ATTACKS (Higher = Better)")
+print("="*60)
+print(ranking.sort_values("Attack", ascending=False).to_string(index=False))
 print()
-print("="*40)
-print("Home advantage home_adv (log-scale):")
+
+print("="*60)
+print("BEST DEFENSES (More Negative = Better)")
+print("="*60)
+print(ranking.sort_values("Defense", ascending=True).to_string(index=False))
+print()
+
+print("="*60)
+print("HOME ADVANTAGE (log-scale)")
+print("="*60)
 
 home_adv = posterior["home_adv"]
 
-print("mean :", home_adv.mean())
-print("std  :", home_adv.std())
-print("95% CI :", np.percentile(home_adv, [2.5, 97.5]))
-print("exp(mean) :", np.exp(home_adv.mean()))
+print(f"Mean  : {home_adv.mean():.4f}")
+print(f"Std   : {home_adv.std():.4f}")
+print(f"95% CI: [{np.percentile(home_adv, 2.5):.4f}, {np.percentile(home_adv, 97.5):.4f}]")
+print(f"exp(mean) = {np.exp(home_adv.mean()):.4f} → ~{(np.exp(home_adv.mean())-1)*100:.1f}% more goals at home")
+print()
+
+print("="*60)
+print("INTERPRETATION:")
+print("="*60)
+print("• Attack > 0  → Strong offense (scores more goals)")
+print("• Attack < 0  → Weak offense (scores fewer goals)")
+print("• Defense > 0 → Weak defense (concedes more goals)")
+print("• Defense < 0 → Strong defense (concedes fewer goals)")
