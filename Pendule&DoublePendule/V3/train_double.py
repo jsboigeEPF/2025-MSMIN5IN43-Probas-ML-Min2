@@ -9,8 +9,9 @@ from double_pendulum_env import DoubleSwingUpCartPoleEnv
 # Génération d'un nom unique
 run_id = datetime.datetime.now().strftime("double_run_%Y%m%d_%H%M%S")
 
-models_dir = f"models/PPO_DoublePendulum/{run_id}"
-log_dir = f"logs_double/{run_id}"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+models_dir = os.path.join(current_dir, "models", "PPO_DoublePendulum", run_id)
+log_dir = os.path.join(current_dir, "logs_double", run_id)
 
 os.makedirs(models_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)

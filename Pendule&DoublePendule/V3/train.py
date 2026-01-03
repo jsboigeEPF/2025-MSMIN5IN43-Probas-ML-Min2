@@ -11,8 +11,11 @@ from custom_env import SwingUpCartPoleEnv
 # Génération d'un nom unique pour cet entraînement
 run_id = datetime.datetime.now().strftime("run_%Y%m%d_%H%M%S")
 
-models_dir = f"models/PPO_SwingUp_V3/{run_id}"
-log_dir = f"logs_swingup_v3/{run_id}"
+# Chemin absolu du dossier V3
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+models_dir = os.path.join(current_dir, "models", "PPO_SwingUp_V3", run_id)
+log_dir = os.path.join(current_dir, "logs_swingup_v3", run_id)
 
 os.makedirs(models_dir, exist_ok=True)
 os.makedirs(log_dir, exist_ok=True)

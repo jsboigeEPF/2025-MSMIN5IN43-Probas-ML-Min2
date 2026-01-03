@@ -9,12 +9,13 @@ import glob
 
 # --- CONFIGURATION ---
 def get_latest_model():
+    # Chemin absolu du dossier V3
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
     # Chemins prioritaires (V3 avec sous-dossiers, puis V2)
     search_dirs = [
-        "V3/models/PPO_SwingUp_V3/**/*.zip",
-        "models/PPO_SwingUp_V3/**/*.zip",
-        "V3/models/PPO_SwingUp_V2/*.zip",
-        "models/PPO_SwingUp_V2/*.zip"
+        os.path.join(current_dir, "models", "PPO_SwingUp_V3", "**", "*.zip"),
+        os.path.join(current_dir, "models", "PPO_SwingUp_V2", "*.zip"),
     ]
     
     all_files = []
@@ -38,7 +39,7 @@ if MODEL_PATH is None:
     print("ERREUR: Aucun modèle (.zip) trouvé dans les dossiers models/PPO_SwingUp_V3 ou V2.")
     print(f"Dossier actuel : {os.getcwd()}")
     # Fallback par défaut pour éviter l'erreur de variable non définie
-    MODEL_PATH = "V3/models/PPO_SwingUp_V3/500000.zip" 
+    MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "PPO_SwingUp_V3", "500000.zip") 
 
 # Couleurs & Setup
 WHITE, BLACK, RED, GREY, BLUE, GREEN = (255, 255, 255), (0, 0, 0), (200, 50, 50), (150, 150, 150), (50, 50, 200), (50, 200, 50)

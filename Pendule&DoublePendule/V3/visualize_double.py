@@ -13,9 +13,8 @@ SCALE = 100
 
 def get_latest_model_dir():
     # Cherche le dernier dossier créé dans models/PPO_DoublePendulum
-    base_dir = "models/PPO_DoublePendulum"
-    if not os.path.exists("models") and os.path.exists("V3/models"): # Fix pour lancement depuis root
-        base_dir = "V3/models/PPO_DoublePendulum"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.join(current_dir, "models", "PPO_DoublePendulum")
         
     if not os.path.exists(base_dir): return None
 
