@@ -1,11 +1,7 @@
-# from PIL import Image, ImageDraw, ImageFont
-# import numpy as np
 import os
 import random
 import string
 import pandas as pd
-
-# from pandas.io.gbq import DataFrame
 from sklearn.model_selection import train_test_split
 from captcha.image import ImageCaptcha
 
@@ -46,16 +42,17 @@ def generate_dataset():
         None,
     )
     print(f"Génération de {NUM_IMAGES} captchas image...")
-    for i in range(NUM_IMAGES):
-        text = generate_random_text()
-        filename = f"{OUTPUT_DIR}/{i}.png"
-        data.append([filename, text])
-        if not os.listdir(OUTPUT_DIR):
-            captcha.write(text, filename)
+    if not os.listdir(OUTPUT_DIR):
+        for i in range(NUM_IMAGES):
+            text = generate_random_text()
+            filename = f"{i}.png"
+            filepath = f"{OUTPUT_DIR}/{filename}"
+            data.append([filename, text])
+            captcha.write(text, filepath)
             if i % 1000 == 0:
                 print(f"  {i}/{NUM_IMAGES}...")
-        else:
-            raise Exception("There is already data in images")
+    else:
+        raise Exception("There is already data in images")
     if not os.path.isfile(CSV_FILE):
         print("Data file doesn't exists. Generating a new one")
         df = pd.DataFrame(data, columns=["filename", "Label"])

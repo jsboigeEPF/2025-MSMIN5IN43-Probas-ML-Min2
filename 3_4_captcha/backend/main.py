@@ -30,15 +30,13 @@ app.add_middleware(
     expose_headers=["X-True-Label", "X-Prediction"],
 )
 
-# Configuration des chemins (Supposant execution depuis 3_4_captcha/)
-BASE_DIR = os.getcwd()
-MODEL_PATH = os.path.join(BASE_DIR, "backend/model.pth")
-if not os.path.exists(MODEL_PATH):
-    # Fallback si on est dans backend/
-    MODEL_PATH = "model.pth"
+# Configuration des chemins robustes
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BACKEND_DIR)
 
-DATA_DIR = os.path.join(BASE_DIR, "data/images")
-VAL_CSV = os.path.join(BASE_DIR, "data/val.csv")
+MODEL_PATH = os.path.join(BACKEND_DIR, "model.pth")
+DATA_DIR = os.path.join(PROJECT_ROOT, "data/images")
+VAL_CSV = os.path.join(PROJECT_ROOT, "data/val.csv")
 
 IMG_WIDTH = 200
 IMG_HEIGHT = 64
@@ -92,6 +90,8 @@ def decode_prediction(preds):
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     image_data = await file.read()
+    print(f"Received file: {file.filename}, Size: {len(image_data)} bytes")
+    print(f"First 10 bytes: {image_data[:10]}")
     image = Image.open(io.BytesIO(image_data)).convert("L")
     img_tensor = transform(image).unsqueeze(0).to(device)
     

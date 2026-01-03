@@ -8,6 +8,7 @@ Ce projet implémente une solution de reconnaissance optique de caractères (OCR
 - `frontend/` : Interface web simple pour tester le modèle.
 - `data/` : Contient le dataset Kaggle (images et labels).
 - `docs/` : Documentation technique détaillée.
+- `fonts/` : Les polices d'ecriture utilisees dans la generation des captchas.
 
 ## Prérequis
 
@@ -51,6 +52,7 @@ Le lancement se fait en deux parties : le serveur API et l'ouverture du fichier 
 # Depuis le dossier 3_4_captcha/backend
 uvicorn main:app --reload
 ```
+
 Le serveur démarrera sur `http://127.0.0.1:8000`.
 
 **Ouvrir le Frontend :**
@@ -67,4 +69,5 @@ Il suffit d'ouvrir le fichier `frontend/index.html` dans votre navigateur web (d
    - La **Prédiction IA** (ce que le modèle a lu).
 
 ## Auteurs
+
 Projet réalisé dans le cadre du cours IA Probabiliste & Machine Learning (2025).
