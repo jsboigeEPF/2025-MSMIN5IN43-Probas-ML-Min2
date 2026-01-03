@@ -6,3 +6,7 @@
 
 # Generated data
 data
+data*
+
+# Python cache
+backend/__pycache__
