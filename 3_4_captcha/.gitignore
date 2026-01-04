@@ -1,0 +1,12 @@
+# Editor configuration files
+.DS_Store
+
+# Python environment directory
+.venv
+
+# Generated data
+data
+data*
+
+# Python cache
+backend/__pycache__
