@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import random
 import string
+import base64
 from captcha.image import ImageCaptcha 
 
 # Import relatif supposant l'exécution via 'uvicorn backend.main:app'
@@ -86,6 +87,64 @@ def decode_prediction(preds):
                 text += IDX2CHAR.get(char_idx, "")
         decoded_texts.append(text)
     return decoded_texts
+
+@app.get("/test-batch")
+def test_batch(n: int = 5):
+    if not os.path.exists(VAL_CSV):
+        return {"error": "Validation set not found"}
+    
+    # Check paths
+    actual_val_csv = VAL_CSV
+    actual_data_dir = DATA_DIR
+    
+    if not os.path.exists(actual_val_csv):
+         # Try fallback paths relative to file
+         actual_val_csv = "../data/val.csv"
+         actual_data_dir = "../data/images"
+
+    try:
+        df = pd.read_csv(actual_val_csv)
+    except:
+        return {"error": "Could not read CSV"}
+
+    if len(df) == 0:
+        return {"error": "Validation set empty"}
+    
+    # Sample n rows
+    n = min(n, len(df))
+    random_rows = df.sample(n)
+    
+    results = []
+    
+    for _, row in random_rows.iterrows():
+        img_name = row['filename']
+        true_label = row['Label']
+        img_path = os.path.join(actual_data_dir, img_name)
+        
+        if not os.path.exists(img_path):
+            continue
+            
+        try:
+            image = Image.open(img_path).convert("L")
+            img_tensor = transform(image).unsqueeze(0).to(device)
+            with torch.no_grad():
+                output = model(img_tensor)
+            prediction = decode_prediction(output)[0]
+            
+            # Encode image to base64
+            with open(img_path, "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+                
+            results.append({
+                "image": f"data:image/png;base64,{encoded_string}",
+                "true_label": true_label,
+                "prediction": prediction
+            })
+        except Exception as e:
+            print(f"Error processing {img_name}: {e}")
+            continue
+
+    return results
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
