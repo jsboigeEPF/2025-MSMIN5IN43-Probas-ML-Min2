@@ -41,7 +41,7 @@ VAL_CSV = os.path.join(PROJECT_ROOT, "data/val.csv")
 
 IMG_WIDTH = 200
 IMG_HEIGHT = 64
-ALPHABET = string.ascii_uppercase
+ALPHABET = string.ascii_uppercase + string.digits
 IDX2CHAR = {idx + 1: char for idx, char in enumerate(ALPHABET)}
 
 # Device Selection
