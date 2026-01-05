@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>FHE Credit Risk - Form</title>
+</head>
+<body>
+  <h1>Credit Risk (FHE) - Formulaire</h1>
+
+  <p><b>Important :</b> le chiffrement est fait localement par le front Python. Le serveur n'obtient jamais les données en clair.</p>
+
+  <form method="post" action="/predict">
+    <h2>Serveur aveugle</h2>
+    <label>URL du serveur (api.py):</label>
+    <input name="server_url" value="{{ default_server }}" style="width: 350px;" />
+
+    <h2>Champs catégoriels</h2>
+    {% for col in cat_cols %}
+      <div style="margin: 6px 0;">
+        <label>{{ col }}:</label>
+        <select name="{{ col }}">
+          {% for v in categories_by_col[col] %}
+            <option value="{{ v }}">{{ v }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+
+    <h2>Champs numériques</h2>
+
+    <div><label>duration:</label> <input name="duration" type="number" step="1" value="12" required></div>
+    <div><label>credit_amount:</label> <input name="credit_amount" type="number" step="1" value="2000" required></div>
+    <div><label>installment_commitment:</label> <input name="installment_commitment" type="number" step="1" value="2" required></div>
+    <div><label>residence_since:</label> <input name="residence_since" type="number" step="1" value="2" required></div>
+    <div><label>age:</label> <input name="age" type="number" step="1" value="35" required></div>
+    <div><label>existing_credits:</label> <input name="existing_credits" type="number" step="1" value="1" required></div>
+    <div><label>num_dependents:</label> <input name="num_dependents" type="number" step="1" value="1" required></div>
+
+    <br/>
+    <button type="submit">Prédire (FHE)</button>
+  </form>
+</body>
+</html>

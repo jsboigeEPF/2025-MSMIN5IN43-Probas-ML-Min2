@@ -1,0 +1,43 @@
+############################
+# Python / Environnement
+############################
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+############################
+# OS / Éditeurs
+############################
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+############################
+# Artifacts FHE (NE PAS VERSIONNER)
+############################
+artifacts/
+
+# Clés cryptographiques (CRITIQUE)
+artifacts/client_keys/
+
+# Modèles compilés FHE
+artifacts/fhe/
+*.zip
+
+# Objets ML sérialisés
+*.joblib
+*.pkl
+
+# Métadonnées générées automatiquement
+artifacts/meta.json
+artifacts/sample_x.npy
+
+############################
+# Logs / temporaires
+############################
+*.log
+*.tmp

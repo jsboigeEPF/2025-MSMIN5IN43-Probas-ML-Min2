@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>FHE Credit Risk - Result</title>
+</head>
+<body>
+  <h1>Résultat</h1>
+
+  <p><b>Serveur aveugle:</b> {{ server_url }}</p>
+
+  <h2>Prédiction</h2>
+  <p><b>{{ pred }}</b></p>
+  <p>p(class=1 / bad) = {{ "%.4f"|format(p_bad) }}</p>
+
+  <h2>Timings</h2>
+  <ul>
+    <li>encrypt_s = {{ "%.3f"|format(timings.encrypt_s) }}</li>
+    <li>server_fhe_s = {{ "%.3f"|format(timings.server_fhe_s) }}</li>
+    <li>decrypt_s = {{ "%.3f"|format(timings.decrypt_s) }}</li>
+  </ul>
+
+  <h2>Données saisies (en clair côté client)</h2>
+  <pre>{{ row | tojson(indent=2) }}</pre>
+
+  <p><a href="/">Retour au formulaire</a></p>
+</body>
+</html>
