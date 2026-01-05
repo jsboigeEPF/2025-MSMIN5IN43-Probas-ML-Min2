@@ -9,6 +9,15 @@ import pandas as pd
 import numpy as np
 import string
 import time
+import sys
+
+# Add parent directory to path to import generate_data
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+try:
+    import generate_data
+except ImportError:
+    # Fallback if running from root
+    import generate_data
 
 # Import de l'architecture partagée
 # On essaye l'import local (si lancé depuis backend/) ou relatif
@@ -24,7 +33,9 @@ if os.path.exists("data"):
 elif os.path.exists("../data"):
     DATA_ROOT = "../data"
 else:
-    raise FileNotFoundError("Dossier data introuvable")
+    # If data doesn't exist, we will create it using generate_data,
+    # but we need a base path. Default to "data" in current dir.
+    DATA_ROOT = "data"
 
 IMAGES_DIR = os.path.join(DATA_ROOT, "images")
 TRAIN_CSV = os.path.join(DATA_ROOT, "train.csv")
@@ -40,14 +51,17 @@ if (
     # Fallback si on est dans 3_4_captcha/
     MODEL_SAVE_PATH = "backend/model.pth"
 """
-MODEL_SAVE_PATH = "model.pth"
+MODEL_SAVE_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "model.pth"
+)
 
 IMG_WIDTH = 200
 IMG_HEIGHT = 64
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
-EPOCHS = 15
-ALPHABET = string.ascii_uppercase
+EPOCHS = 20
+NUM_IMAGES = 8000
+ALPHABET = string.ascii_uppercase + string.digits
 
 # Mapping caractères <-> index
 # CTC Blank est souvent 0. Donc A=1, B=2, ...
@@ -196,19 +210,9 @@ def main():
         ]
     )
 
-    # Datasets
-    train_dataset = CaptchaDataset(TRAIN_CSV, IMAGES_DIR, transform=transform)
-    val_dataset = CaptchaDataset(VAL_CSV, IMAGES_DIR, transform=transform)
-
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=True,
-        collate_fn=collate_fn,
-    )
-    val_loader = DataLoader(
-        val_dataset, batch_size=BATCH_SIZE, shuffle=False, collate_fn=collate_fn
-    )
+    # Initial Datasets (Empty placeholder or first generation)
+    # We will generate inside the loop, so we can define them there.
+    # But to be safe, we might need them for Model init? No.
 
     # Model
     model = CRNN(num_chars=len(ALPHABET), hidden_size=256)
@@ -228,6 +232,33 @@ def main():
 
     for epoch in range(EPOCHS):
         start_time = time.time()
+
+        # --- GENERATION NOUVELLE DATA ---
+        print(f"--- Epoch {epoch+1}: Génération de nouvelles données... ---")
+        generate_data.generate_dataset(
+            force=True, root_dir=DATA_ROOT, num_images=NUM_IMAGES
+        )
+
+        # Rechargement des datasets
+        train_dataset = CaptchaDataset(
+            TRAIN_CSV, IMAGES_DIR, transform=transform
+        )
+        val_dataset = CaptchaDataset(VAL_CSV, IMAGES_DIR, transform=transform)
+
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=True,
+            collate_fn=collate_fn,
+        )
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=False,
+            collate_fn=collate_fn,
+        )
+        # --------------------------------
+
         train_loss = train_epoch(
             model, train_loader, criterion, optimizer, device
         )
