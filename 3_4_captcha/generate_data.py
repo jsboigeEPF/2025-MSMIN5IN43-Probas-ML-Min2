@@ -12,7 +12,7 @@ CSV_FILE = os.path.join(DATA_ROOT, "dataset.csv")
 ALPHABET = string.ascii_uppercase + string.digits
 WIDTH = 400
 HEIGHT = 80
-NUM_IMAGES = 8000
+NUM_IMAGES = 10000
 
 # Captchas object Configuration
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
