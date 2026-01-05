@@ -55,12 +55,12 @@ MODEL_SAVE_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "model.pth"
 )
 
-IMG_WIDTH = 200
-IMG_HEIGHT = 64
+IMG_WIDTH = 400
+IMG_HEIGHT = 80
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 EPOCHS = 20
-NUM_IMAGES = 8000
+NUM_IMAGES = 10000
 ALPHABET = string.ascii_uppercase + string.digits
 
 # Mapping caractères <-> index
@@ -132,7 +132,7 @@ def train_epoch(model, loader, criterion, optimizer, device):
         preds_permuted = preds.permute(1, 0, 2)
 
         # Input lengths : tous egaux à la largeur temporelle de sortie du CNN/RNN
-        # Ici c'est 50 (cf architecture.py: W // 4 = 200 // 4 = 50)
+        # Ici c'est 100 (cf architecture.py: W // 4 = 400 // 4 = 100)
         # Mais on récupère dynamiquement
         input_lengths = torch.full(
             size=(images.size(0),), fill_value=preds.size(1), dtype=torch.long

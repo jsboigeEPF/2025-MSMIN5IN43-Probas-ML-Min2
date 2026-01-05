@@ -10,9 +10,9 @@ DATA_ROOT = "data"
 OUTPUT_DIR = os.path.join(DATA_ROOT, "images")
 CSV_FILE = os.path.join(DATA_ROOT, "dataset.csv")
 ALPHABET = string.ascii_uppercase + string.digits
-WIDTH = 220
-HEIGHT = 64
-NUM_IMAGES = 8000
+WIDTH = 400
+HEIGHT = 80
+NUM_IMAGES = 10000
 
 # Captchas object Configuration
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +26,7 @@ captcha: ImageCaptcha = ImageCaptcha(
         os.path.join(FONTS_DIR, "AdwaitaSans-Regular.ttf"),
         os.path.join(FONTS_DIR, "Hack-Regular.ttf"),
     ],
-    font_sizes=(30, 40, 50),  # NOQA: Type hint was done wrong
+    font_sizes=(40, 50, 60),  # NOQA: Type hint was done wrong
 )
 
 if not os.path.exists(OUTPUT_DIR):
