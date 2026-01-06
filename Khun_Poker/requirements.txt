@@ -1,0 +1,12 @@
+# Poker AI - CFR Implementation
+# Requirements for running the Kuhn Poker CFR project
+
+# Core dependencies
+numpy>=1.21.0          # Numerical computing and array operations
+matplotlib>=3.5.0      # Plotting and visualizations
+
+# Optional but recommended for development
+# pytest>=7.0.0        # Unit testing framework
+# jupyter>=1.0.0       # Interactive notebooks
+# black>=22.0.0        # Code formatting
+# flake8>=4.0.0        # Linting
